@@ -1,1 +1,0 @@
-# dmitriyyurck.github.io
