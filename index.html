@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dmitri Yurck</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+    --bg-base: #ffffff;
+    --blob-1: #f0f0f0;
+    --blob-2: #e0e0e0;
+    --glass-bg: rgba(255, 255, 255, 0.5);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --glass-shadow: rgba(0, 0, 0, 0.04);
+    --text-primary: #000000;
+    --text-secondary: #6e6e73;
+    --card-hover: rgba(0, 0, 0, 0.03);
+    --btn-bg: rgba(0, 0, 0, 0.05);
+}
+[data-theme="dark"] {
+    --bg-base: #000000;
+    --blob-1: #111111;
+    --blob-2: #1a1a1a;
+    --glass-bg: rgba(20, 20, 20, 0.5);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-shadow: rgba(0, 0, 0, 0.5);
+    --text-primary: #ffffff;
+    --text-secondary: #86868b;
+    --card-hover: rgba(255, 255, 255, 0.05);
+    --btn-bg: rgba(255, 255, 255, 0.1);
+}
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding: 4rem 1.5rem;
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+.bg-mesh {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+    background: var(--bg-base);
+    transition: background 0.5s ease;
+}
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.8;
+    animation: float 20s infinite ease-in-out alternate;
+}
+.blob-1 {
+    top: -10%;
+    left: -10%;
+    width: 50vw;
+    height: 50vw;
+    background: var(--blob-1);
+    animation-delay: 0s;
+}
+.blob-2 {
+    bottom: -10%;
+    right: -10%;
+    width: 60vw;
+    height: 60vw;
+    background: var(--blob-2);
+    animation-delay: -5s;
+}
+@keyframes float {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(10%, 15%) scale(1.1); }
+}
+.nav-controls {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    gap: 0.75rem;
+    z-index: 100;
+}
+.glass-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 16px var(--glass-shadow);
+    transition: all 0.3s ease;
+}
+.glass-btn:hover {
+    background: var(--card-hover);
+    transform: scale(1.05);
+}
+.container {
+    width: 100%;
+    max-width: 860px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    animation: fadeUp 0.8s ease forwards;
+}
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    padding: 2.5rem;
+    box-shadow: 0 8px 32px var(--glass-shadow);
+    transition: border-color 0.5s ease, background 0.5s ease, transform 0.3s ease;
+}
+.hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+}
+.avatar-container {
+    position: relative;
+    width: 140px;
+    height: 140px;
+}
+.avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--glass-border);
+    box-shadow: 0 12px 32px var(--glass-shadow);
+    background-color: var(--bg-base);
+}
+.avatar-ring {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border-radius: 50%;
+    border: 1px solid var(--glass-border);
+    pointer-events: none;
+}
+h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+}
+.bio {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+    max-width: 600px;
+    line-height: 1.6;
+}
+h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+}
+.stack-card {
+    background: var(--btn-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: all 0.3s ease;
+}
+.stack-card:hover {
+    background: var(--card-hover);
+    transform: translateY(-2px);
+}
+.stack-title {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.tag {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.85rem;
+    background: var(--bg-base);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+.stats-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+}
+.stats-img {
+    width: 100%;
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    background: var(--btn-bg);
+    transition: all 0.3s ease;
+}
+.stats-img:hover {
+    transform: scale(1.02);
+}
+.contact-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+.contact-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1.25rem;
+    background: var(--btn-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+.contact-btn:hover {
+    background: var(--card-hover);
+    transform: translateY(-2px);
+}
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+@media (max-width: 768px) {
+    body { padding: 5rem 1rem 2rem 1rem; }
+    h1 { font-size: 2.25rem; }
+    .glass-panel { padding: 1.75rem; }
+    .stats-wrapper { grid-template-columns: 1fr; }
+    .contact-list { grid-template-columns: 1fr; }
+    .bio { font-size: 1.05rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-mesh">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+</div>
+
+<div class="nav-controls">
+    <button class="glass-btn" onclick="toggleLang()">
+        <i class="fa-solid fa-language"></i>
+    </button>
+    <button class="glass-btn" onclick="toggleTheme()">
+        <i class="fa-solid fa-circle-half-stroke"></i>
+    </button>
+</div>
+
+<div class="container">
+    <section class="glass-panel hero">
+        <div class="avatar-container">
+            <div class="avatar-ring"></div>
+            <img src="https://github.com/DmitriyYurck.png" alt="Dmitri Yurck" class="avatar">
+        </div>
+        <h1>Dmitri Yurck</h1>
+        <p class="bio" id="txt-bio">Machine Learning Engineer focused on Large Language Model development and robust alignment.</p>
+    </section>
+
+    <section class="glass-panel">
+        <h2 id="txt-stack-title"><i class="fa-solid fa-layer-group"></i> Technology Stack</h2>
+        <div class="grid">
+            <div class="stack-card">
+                <div class="stack-title" id="txt-lang">Languages</div>
+                <div class="tags">
+                    <span class="tag"><i class="fa-brands fa-python"></i> Python</span>
+                    <span class="tag"><i class="fa-solid fa-microchip"></i> Triton</span>
+                    <span class="tag"><i class="fa-solid fa-c"></i> C++</span>
+                    <span class="tag"><i class="fa-solid fa-terminal"></i> Bash</span>
+                </div>
+            </div>
+            <div class="stack-card">
+                <div class="stack-title" id="txt-fw">Core Frameworks</div>
+                <div class="tags">
+                    <span class="tag"><i class="fa-solid fa-fire"></i> PyTorch</span>
+                </div>
+            </div>
+            <div class="stack-card">
+                <div class="stack-title" id="txt-llm">LLM Training & Alignment</div>
+                <div class="tags">
+                    <span class="tag"><i class="fa-solid fa-rocket"></i> DeepSpeed</span>
+                    <span class="tag"><i class="fa-solid fa-robot"></i> Megatron-LM</span>
+                    <span class="tag"><i class="fa-solid fa-sliders"></i> TRL</span>
+                </div>
+            </div>
+            <div class="stack-card">
+                <div class="stack-title" id="txt-inf">Inference & Serving</div>
+                <div class="tags">
+                    <span class="tag"><i class="fa-solid fa-bolt"></i> vLLM</span>
+                    <span class="tag"><i class="fa-brands fa-docker"></i> Docker</span>
+                </div>
+            </div>
+            <div class="stack-card" style="grid-column: 1 / -1;">
+                <div class="stack-title" id="txt-ops">Infrastructure & Ops</div>
+                <div class="tags">
+                    <span class="tag"><i class="fa-solid fa-dharmachakra"></i> Kubernetes</span>
+                    <span class="tag"><i class="fa-brands fa-linux"></i> Linux</span>
+                    <span class="tag"><i class="fa-solid fa-chart-line"></i> W&B</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="glass-panel">
+        <h2 id="txt-git-title"><i class="fa-brands fa-github-alt"></i> Activity Map</h2>
+        <div class="stats-wrapper">
+            <img id="img-stat1" class="stats-img" src="https://github-readme-stats.vercel.app/api?username=DmitriyYurck&show_icons=true&hide_border=true&theme=dark&bg_color=00000000&title_color=ffffff&text_color=ffffff&icon_color=ffffff" alt="Stats">
+            <img id="img-stat2" class="stats-img" src="https://github-readme-stats.vercel.app/api/top-langs/?username=DmitriyYurck&layout=compact&hide_border=true&theme=dark&bg_color=00000000&title_color=ffffff&text_color=ffffff" alt="Langs">
+        </div>
+    </section>
+
+    <section class="glass-panel">
+        <h2 id="txt-contact-title"><i class="fa-solid fa-address-card"></i> Connect</h2>
+        <div class="contact-list">
+            <a href="mailto:dmitriyyurck@outlook.com" class="contact-btn">
+                <i class="fa-solid fa-envelope"></i> <span id="txt-email">Email</span>
+            </a>
+            <a href="https://huggingface.co/DmitriyYurckML" target="_blank" rel="noopener noreferrer" class="contact-btn">
+                <i class="fa-solid fa-face-smiling-hands"></i> <span id="txt-hf">Hugging Face</span>
+            </a>
+            <a href="https://github.com/DmitriyYurck" target="_blank" rel="noopener noreferrer" class="contact-btn">
+                <i class="fa-brands fa-github"></i> <span id="txt-gh">GitHub</span>
+            </a>
+        </div>
+    </section>
+</div>
+
+<script>
+const content = {
+    en: {
+        bio: "Machine Learning Engineer focused on Large Language Model development and robust alignment.",
+        stackTitle: '<i class="fa-solid fa-layer-group"></i> Technology Stack',
+        lang: "Languages",
+        fw: "Core Frameworks",
+        llm: "LLM Training & Alignment",
+        inf: "Inference & Serving",
+        ops: "Infrastructure & Ops",
+        gitTitle: '<i class="fa-brands fa-github-alt"></i> Activity Map',
+        contactTitle: '<i class="fa-solid fa-address-card"></i> Connect',
+        email: "Email",
+        hf: "Hugging Face",
+        gh: "GitHub"
+    },
+    zh: {
+        bio: "机器学习工程师，专注于大型语言模型开发和稳健的语言对齐。",
+        stackTitle: '<i class="fa-solid fa-layer-group"></i> 技术栈',
+        lang: "编程语言",
+        fw: "核心框架",
+        llm: "大模型训练与对齐",
+        inf: "推理与部署",
+        ops: "基础设施与运维",
+        gitTitle: '<i class="fa-brands fa-github-alt"></i> 活跃概览',
+        contactTitle: '<i class="fa-solid fa-address-card"></i> 联系方式',
+        email: "电子邮件",
+        hf: "Hugging Face",
+        gh: "GitHub"
+    }
+};
+
+let lang = 'en';
+
+function toggleLang() {
+    lang = lang === 'en' ? 'zh' : 'en';
+    document.getElementById('txt-bio').innerText = content[lang].bio;
+    document.getElementById('txt-stack-title').innerHTML = content[lang].stackTitle;
+    document.getElementById('txt-lang').innerText = content[lang].lang;
+    document.getElementById('txt-fw').innerText = content[lang].fw;
+    document.getElementById('txt-llm').innerText = content[lang].llm;
+    document.getElementById('txt-inf').innerText = content[lang].inf;
+    document.getElementById('txt-ops').innerText = content[lang].ops;
+    document.getElementById('txt-git-title').innerHTML = content[lang].gitTitle;
+    document.getElementById('txt-contact-title').innerHTML = content[lang].contactTitle;
+    document.getElementById('txt-email').innerText = content[lang].email;
+    document.getElementById('txt-hf').innerText = content[lang].hf;
+    document.getElementById('txt-gh').innerText = content[lang].gh;
+}
+
+function toggleTheme() {
+    const root = document.documentElement;
+    const current = root.getAttribute('data-theme');
+    const isDark = current === 'dark';
+    const nextTheme = isDark ? 'light' : 'dark';
+    root.setAttribute('data-theme', nextTheme);
+    
+    const themeStr = isDark ? 'light' : 'dark';
+    const colorStr = isDark ? '111111' : 'ffffff';
+    const bgStr = '00000000';
+    
+    document.getElementById('img-stat1').src = `https://github-readme-stats.vercel.app/api?username=DmitriyYurck&show_icons=true&hide_border=true`;
+    document.getElementById('img-stat2').src = `https://github-readme-stats.vercel.app/api/top-langs/?username=DmitriyYurck&layout=compact&hide_border=true`;
+}
+</script>
+</body>
+</html>
+  
